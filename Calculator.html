@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator | Manasa G</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #fbe3e8, #d7efff, #d4f8d4);
+      background-size: 300% 300%;
+      animation: moveBg 8s infinite alternate ease-in-out;
+      font-family: "Poppins", sans-serif;
+    }
+
+    @keyframes moveBg {
+      0% { background-position: left top; }
+      100% { background-position: right bottom; }
+    }
+    .calculator {
+      width: 350px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(15px);
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 2px 6px rgba(255,255,255,0.5);
+      padding: 25px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .calculator:hover {
+      transform: translateY(-8px);
+    }
+    .calculator::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffb6c1, #ffcce7, transparent);
+      filter: blur(30px);
+      z-index: 0;
+      animation: glow 5s infinite alternate ease-in-out;
+    }
+
+    @keyframes glow {
+      from { opacity: 0.4; transform: scale(1); }
+      to { opacity: 0.7; transform: scale(1.2); }
+    }
+    .display {
+      width: 100%;
+      height: 70px;
+      border: none;
+      outline: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #f0f7ff, #ffffff);
+      box-shadow: inset 2px 2px 6px #cdd9e8, inset -3px -3px 6px #ffffff;
+      font-size: 2rem;
+      text-align: right;
+      padding: 15px;
+      color: #2b2b2b;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 1;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      z-index: 1;
+      position: relative;
+    }
+
+    button {
+      height: 60px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
+      background: linear-gradient(145deg, #ffffff, #e5ecf9);
+      box-shadow: 3px 3px 6px #b8c6db, -3px -3px 6px #ffffff;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+    .operator {
+      background: linear-gradient(145deg, #ffe1b2, #ffc3a0);
+      color: #5a2d00;
+    }
+    .equal {
+      grid-column: span 2;
+      background: linear-gradient(145deg, #b4f1b2, #9ef5a2);
+      font-weight: 600;
+      color: #084c0b;
+    }
+    .clear {
+      background: linear-gradient(145deg, #ffb6b6, #ff8c8c);
+      color: white;
+      font-weight: 600;
+    }
+    footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+      z-index: 1;
+      position: relative;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <input type="text" id="display" class="display" disabled value="0">
+    
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="appendValue('%')">%</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+
+    <footer>© 2025 Built by Manasa G | All Rights Reserved</b> ✨</footer>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    function appendValue(value) {
+      if (display.value === "0" || display.value === "Error") {
+        display.value = value;
+      } else {
+        display.value += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.value = "0";
+    }
+
+    function deleteLast() {
+      display.value = display.value.slice(0, -1) || "0";
+    }
+
+    function calculate() {
+      try {
+        let expression = display.value.replace(/÷/g, "/").replace(/×/g, "*");
+        let result = eval(expression);
+        display.value = (result === Infinity || isNaN(result)) ? "Error" : result;
+      } catch {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
