@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manasa’s Calculator ✨</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #fbe3e8, #d7efff, #d4f8d4);
+      background-size: 300% 300%;
+      animation: gradientMove 8s ease-in-out infinite alternate;
+    }
+    @keyframes gradientMove {
+      from { background-position: left top; }
+      to { background-position: right bottom; }
+    }
+    .calculator {
+      width: 340px;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .calculator:hover {
+      transform: translateY(-6px);
+    }
+    .calculator::before {
+      content: "";
+      position: absolute;
+      top: -70px;
+      right: -70px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffc4e1, #ffd5ef, transparent);
+      filter: blur(30px);
+      opacity: 0.6;
+      z-index: 0;
+      animation: softGlow 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes softGlow {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.2); opacity: 0.7; }
+    }
+    .display {
+      width: 100%;
+      height: 70px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #f0f7ff, #ffffff);
+      box-shadow: inset 2px 2px 6px #cdd9e8, inset -3px -3px 6px #ffffff;
+      font-size: 2rem;
+      text-align: right;
+      padding: 15px;
+      color: #2b2b2b;
+      margin-bottom: 25px;
+      outline: none;
+      z-index: 1;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      z-index: 1;
+    }
+
+    button {
+      height: 60px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      background: linear-gradient(145deg, #ffffff, #e5ecf9);
+      box-shadow: 3px 3px 6px #b8c6db, -3px -3px 6px #ffffff;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+    .operator {
+      background: linear-gradient(145deg, #ffe1b2, #ffc3a0);
+      color: #5a2d00;
+    }
+
+    .equal {
+      grid-column: span 2;
+      background: linear-gradient(145deg, #b4f1b2, #9ef5a2);
+      color: #084c0b;
+      font-weight: 600;
+    }
+
+    .clear {
+      background: linear-gradient(145deg, #ffb6b6, #ff8c8c);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="calculator">
+    <!-- The display, where numbers and results appear -->
+    <input type="text" id="display" class="display" value="0" disabled />
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="appendValue('%')">%</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+
+    <footer>© 2025 — Built by Manasa G 💻</footer>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    function appendValue(value) {
+      // If display is "0" or previously errored out, reset it first
+      if (display.value === "0" || display.value === "Error") {
+        display.value = value;
+      } else {
+        display.value += value;
+      }
+    }
+    function clearDisplay() {
+      display.value = "0";
+    }
+    function deleteLast() {
+      // Using slice because it's simple and readable (even though we could substring)
+      display.value = display.value.slice(0, -1) || "0";
+    }
+    function calculate() {
+      try {
+        let exp = display.value.replace(/÷/g, "/").replace(/×/g, "*");
+        let result = eval(exp);  // I know eval isn’t ideal, but for a demo calculator, it works fine
+
+        // Prevent weird outputs like Infinity or NaN
+        if (result === Infinity || isNaN(result)) {
+          display.value = "Error";
+        } else {
+          // Limit precision to avoid super long decimals
+          display.value = parseFloat(result.toFixed(10)).toString();
+        }
+
+      } catch (err) {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
