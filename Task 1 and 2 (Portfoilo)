@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* Reset (the sacred ritual) */
 * {
   margin: 0;
   padding: 0;
@@ -117,7 +116,6 @@ p, ul {
   margin-bottom: 15px;
 }
 
-/* Making lists look neat */
 ul { list-style: none; padding: 0; }
 
 li {
@@ -178,7 +176,6 @@ li {
 .feature-box h3 { margin-bottom: 10px; color: #f08ec1; }
 .feature-box p { color: #555; font-size: 0.95em; }
 
-/* Projects scroll area */
 .projects-scroll {
   height: calc(100vh - 80px);
   overflow-y: auto;
